@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Human: Motion Analytics Demo</title>
+    <meta name="viewport" content="width=device-width" id="viewport">
+    <meta name="keywords" content="Human">
+    <meta name="application-name" content="Human">
+    <meta name="description" content="Human: Motion Analytics Demo; Author: Vladimir Mandic <https://github.com/vladmandic>">
+    <meta name="msapplication-tooltip" content="Human: Motion Analytics Demo; Author: Vladimir Mandic <https://github.com/vladmandic>">
+    <meta name="theme-color" content="#000000">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script src="../dist/index.js" type="module"></script>
+    <style>
+      @font-face { font-family: 'Lato'; font-display: swap; font-style: normal; font-weight: 100; src: local('Lato'), url('../assets/lato-light.woff2') }
+      html { font-family: 'Lato', 'Segoe UI'; font-size: 16px; font-variant: small-caps; }
+      body { margin: 0; background: black; color: white; overflow-x: hidden; width: 100vw; height: 100vh; }
+      body::-webkit-scrollbar { display: none; }
+      .input { font-family: 'Lato', 'Segoe UI'; font-size: 16px; font-variant: small-caps; height: 24px; width: 240px; }
+    </style>
+  </head>
+  <body>
+    <pre id="status" style="position: absolute; top: 12px; right: 20px; background-color: #555555; padding: 8px; box-shadow: 2px 2px black; z-index: 1"></pre>
+    <div id="media">
+      <video id="video" style="width: 25vw; height: fit-content; position: fixed; top: 0; left: 0" autoplay loop muted controlslist="nofullscreen nodownload noremoteplayback" disablepictureinpicture></video>
+      <canvas id="output-overlay" style="width: 25vw; height: fit-content; position: fixed; top: 25vw; left: 0" width=720 height=720></canvas>
+      <canvas id="output-mesh" style="width: 75vw; height: 75vw; position: fixed; top: 0; right: 0" width=1920 height=1024></canvas>
+    </div>
+    <div id="selections" style="line-height: 32px; position: fixed; bottom: 0; left: 0; background: #555555; width: 100vw; padding-left: 20px">
+      <span>input:
+        <select id="input" name="select-input" title="select-input" style="margin-left: 20px" class="input"></select>
+        <input type="file" id="file-input" style="display: none">
+      </span>
+    </div>
+  </body>
+</html>
