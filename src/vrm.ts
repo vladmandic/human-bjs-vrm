@@ -7,7 +7,7 @@ import type { VRMManager } from '../vrm/index';
 let vrm: VRMManager;
 
 export async function init(t: B.Scene) {
-  const scene = await B.SceneLoader.AppendAsync('', 'assets/models/nude-short.vrm', t);
+  const scene = await B.SceneLoader.AppendAsync('', 'assets/models/victoria-jeans.vrm', t);
   vrm = scene.metadata.vrmManagers[0];
   console.log({ vrm, morphs: vrm.getMorphingList() });
   scene.onBeforeRenderObservable.add(() => vrm.update(scene.getEngine().getDeltaTime())); // Update secondary animation
@@ -16,10 +16,7 @@ export async function init(t: B.Scene) {
   // vrm.morphing('Joy', 1.0); // Work with BlendShape(MorphTarget)
 }
 
-// shared variables
-let leanBody = 0; // face angle is relative to body
-let posLeftWrist; // hand model needs to know which body hand is closest so we define this variable as global
-let posRightWrist; // hand model needs to know which body hand is closest so we define this variable as global
+let leanBody = 0; // face angle is relative to body so we set it globally
 
 const angle = (pt1: H.Point | null, pt2: H.Point | null) => {
   if (!pt1 || !pt2 || pt1.length < 2 || pt2.length < 2) return 0;
@@ -38,36 +35,24 @@ async function updateBody(res: H.Result) {
   };
 
   // lean body
-  const posLeftShoulder = part('leftShoulder');
-  const posRightShoulder = part('rightShoulder');
-  leanBody = angle(posRightShoulder, posLeftShoulder);
-  if (posLeftShoulder && posRightShoulder) vrm.humanoidBone.chest.rotation = new Vector3(0, 0, leanBody);
+  leanBody = angle(part('rightShoulder'), part('leftShoulder'));
+  vrm.humanoidBone.chest.rotation = new Vector3(0, 0, leanBody);
 
   // arms
-  const posRightElbow = part('rightElbow');
-  if (posRightShoulder && posRightElbow) vrm.humanoidBone.rightUpperArm.rotation = new Vector3(0, angle(posRightElbow, posRightShoulder), 0);
-  const posLeftElbow = part('leftElbow');
-  if (posLeftShoulder && posLeftElbow) vrm.humanoidBone.leftUpperArm.rotation = new Vector3(0, angle(posLeftShoulder, posLeftElbow), 0);
+  // vrm.humanoidBone.rightUpperArm.rotation = new Vector3(0, angle(part('rightElbow'), part('rightShoulder')), 0);
+  // vrm.humanoidBone.leftUpperArm.rotation = new Vector3(0, angle(part('leftShoulder'), part('leftElbow')), 0);
 
   // elbows
-  posRightWrist = part('rightWrist');
-  vrm.humanoidBone.rightLowerArm.rotation = new Vector3(0, (posRightWrist && posRightElbow && posRightShoulder) ? angle(posRightWrist, posRightElbow) - angle(posRightElbow, posRightShoulder) : 0, 0);
-  posLeftWrist = part('leftWrist');
-  vrm.humanoidBone.leftLowerArm.rotation = new Vector3(0, (posLeftWrist && posLeftElbow) ? angle(posLeftElbow, posLeftWrist) - angle(posLeftShoulder, posLeftElbow) : 0, 0);
+  // vrm.humanoidBone.rightLowerArm.rotation = new Vector3(0, angle(part('rightWrist'), part('rightElbow')) - angle(part('rightElbow'), part('rightShoulder')), 0);
+  // vrm.humanoidBone.leftLowerArm.rotation = new Vector3(0, angle(part('leftElbow'), part('leftWrist')) - angle(part('leftShoulder'), part('leftElbow')), 0);
 
   // legs
-  const posRightHip = part('rightHip');
-  const posRightKnee = part('rightKnee');
-  vrm.humanoidBone.rightUpperLeg.rotation = new Vector3(0, 0, (posRightHip && posRightKnee) ? angle(posRightHip, posRightKnee) - (Math.PI / 2) : 0);
-  const posLeftHip = part('leftHip');
-  const posLeftKnee = part('leftKnee');
-  vrm.humanoidBone.leftUpperLeg.rotation = new Vector3(0, 0, (posLeftHip && posLeftKnee) ? angle(posLeftHip, posLeftKnee) - (Math.PI / 2) : 0);
+  // vrm.humanoidBone.rightUpperLeg.rotation = new Vector3(0, 0, angle(part('rightHip'), part('rightKnee')) - (Math.PI / 2));
+  // vrm.humanoidBone.leftUpperLeg.rotation = new Vector3(0, 0, angle(part('leftHip'), part('leftKnee')) - (Math.PI / 2));
 
   // knees
-  // const posRightAnkle = part('rightAnkle');
-  // vrm.humanoid.getBoneNode(VRMSchema.HumanoidBoneName.RightLowerLeg).rotation.z = (posRightHip && posRightAnkle) ? angle(posRightHip, posRightAnkle) - (Math.PI / 2) : 0;
-  // const posLeftAnkle = part('leftAnkle');
-  // vrm.humanoid.getBoneNode(VRMSchema.HumanoidBoneName.LeftLowerLeg).rotation.z = (posLeftHip && posLeftAnkle) ? angle(posLeftHip, posLeftAnkle) - (Math.PI / 2) : 0;
+  // vrm.humanoidBone.rightLowerLeg.rotation = new Vector3(0, 0, angle(part('rightHip'), part('rightAnkle')) - (Math.PI / 2));
+  // vrm.humanoidBone.leftLowerLeg.rotation = new Vector3(0, 0, angle(part('leftHip'), part('leftAnkle')) - (Math.PI / 2));
 }
 
 /*
