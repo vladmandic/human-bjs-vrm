@@ -70,7 +70,7 @@ async function drawResults() {
 // detect loop runs as fast as results are received
 async function requestDetect() {
   if (busy || dom.video.readyState < 2) return; // already processing or video not ready
-  const processed = await human.image(dom.video); // only pre-process input video in main thread
+  const processed = await human.image(dom.video, true); // only pre-process input video in main thread
   const image = await processed.tensor?.data() as Float32Array; // download data to use as transferrable object
   human.tf.dispose(processed.tensor);
   if (image) {

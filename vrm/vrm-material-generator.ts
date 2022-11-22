@@ -120,17 +120,10 @@ export class VRMMaterialGenerator {
     return Promise.all(promises).then(() => material);
   }
 
-  private createMaterialByShader(
-    context: string,
-    material: IMaterial,
-    babylonDrawMode: number,
-    prop: IVRMMaterialProperty,
-  ): Nullable<Material> {
+  private createMaterialByShader(context: string, material: IMaterial, babylonDrawMode: number, prop: IVRMMaterialProperty): Nullable<Material> {
+    return null;
     if (prop.shader === IVRMMaterialPropertyShader.VRMMToon) {
-      const mtoonMaterial = new MToonMaterial(
-        material.name || `MToonMaterial${material.index}`,
-        this.loader.babylonScene,
-      );
+      const mtoonMaterial = new MToonMaterial(material.name || `MToonMaterial${material.index}`, this.loader.babylonScene);
       this.setMToonMaterialProperties(mtoonMaterial, prop);
       return mtoonMaterial;
     }
